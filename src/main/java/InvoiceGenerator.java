@@ -1,27 +1,24 @@
 public class InvoiceGenerator {
-    private final int COSTPERKM = 10;
-    private final int COSTPERMINUTE = 1;
-    public int MIN_FARE = 5;
+
     double totalFare;
     RideRepository rideRepository = new RideRepository();
 
-    public double calculateFare(double distance, int time) {
-
-        totalFare = COSTPERKM * distance + COSTPERMINUTE * time;
-        return Math.max(totalFare,MIN_FARE);
+    public double calculateFare(double distance, int time, PremiumRide type) {
+        totalFare = type.getCostPerKm() * distance + type.getCostPerMin() * time;
+        return Math.max(totalFare,type.getMinFare());
     }
 
     public InvoiceSummary calculateFare(Rides[] rides) {
         double totalFare = 0.0;
         for (Rides ride : rides)
-            totalFare = totalFare + this.calculateFare(ride.distance, ride.time);
+            totalFare = totalFare + this.calculateFare(ride.distance, ride.time, ride.rideType);
         return new InvoiceSummary(rides.length, totalFare);
     }
 
     public double calculateTotalFare(Rides[] rides) {
         double totalFare = 0.0;
         for (Rides ride : rides)
-            totalFare = totalFare + this.calculateFare(ride.distance, ride.time);
+            totalFare = totalFare + this.calculateFare(ride.distance, ride.time,ride.rideType);
         return totalFare;
     }
 
